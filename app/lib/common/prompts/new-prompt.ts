@@ -74,11 +74,12 @@ The year is 2025.
          \`window.dispatchEvent(new Event('storage'))\`
          \`document.dispatchEvent(new CustomEvent('bolt-data-updated'))\`
          This allows the GenUI Studio Workbench "Database" tab and "Reportes IA" tab to detect live data changes in real time!
-    4. DATABASE SCHEMA FILES:
+    4. DATABASE SCHEMA & MOCK DATA FILES (MANDATORY FOR SQL REPORTS):
+       - CRITICAL FOR IA REPORTS & SQL ENGINE (ALASQL): You MUST ALWAYS create a mock data file at \`/src/data/mockData.json\` (or \`/mockData.json\`) containing rich, realistic JSON arrays for every entity/table (e.g. \`"products": [{ "id": 1, "name": "...", "category": "tejidos", ... }]\`, \`"categories": [...]\`, \`"orders": [...]\`) with at least 5-10 records per table. The GenUI Studio SQL Report Engine (AlaSQL) reads this \`mockData.json\` to execute user SQL queries and generate live reports (e.g. \`SELECT name, category FROM products WHERE category = 'tejidos'\`).
        - Always create a structured schema file \`/src/db/schema.json\` (and \`/src/db/schema.ts\`) with:
          * \`classes\`: array of tables containing \`name\`, \`table_name\`, \`description\`, \`attributes\` (name, type, pk, fk, description), and realistic \`seed_data\` (3-10 records per table).
        - Create SQL DDL in \`/db/schema.sql\` with \`CREATE TABLE\` and \`INSERT INTO\` statements.
-       - Create a clean database manager or helper in \`/src/db/database.ts\` that centralizes CRUD methods and persists to \`localStorage\` or \`IndexedDB\`.`
+       - Create a clean database manager or helper in \`/src/db/database.ts\` that centralizes CRUD methods, imports \`/src/data/mockData.json\` for initial seed state, and persists to \`localStorage\` or \`IndexedDB\`.`
   }
 
 
