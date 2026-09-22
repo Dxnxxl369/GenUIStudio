@@ -746,12 +746,37 @@ export function extractProjectTables(files: FileMap): ReportTable[] {
     }
   }
 
-  // 4. Browser localStorage inspection (ONLY for tables that belong to current project)
+  // 4. Browser localStorage inspection (both existing project tables and newly created live tables)
   if (typeof window !== 'undefined' && window.localStorage) {
     try {
+      const ignoredKeys = new Set([
+        'bolt-theme',
+        'theme',
+        'providers',
+        'apiKeys',
+        'bolt-current-chat',
+        'bolt-model-settings',
+        'bolt-deleted-paths',
+        'currentChatId',
+        'chakra-ui-color-mode',
+        'i18nextLng',
+        'loglevel',
+      ]);
+
       for (let i = 0; i < window.localStorage.length; i++) {
         const key = window.localStorage.key(i);
-        if (!key || key.startsWith('__') || key.startsWith('vite') || key.startsWith('remix') || key.startsWith('bolt-')) continue;
+        if (
+          !key ||
+          ignoredKeys.has(key) ||
+          key.startsWith('__') ||
+          key.startsWith('vite') ||
+          key.startsWith('remix') ||
+          key.startsWith('bolt-') ||
+          key.startsWith('sb-') ||
+          key.startsWith('supabase-')
+        ) {
+          continue;
+        }
 
         try {
           const itemVal = window.localStorage.getItem(key);
@@ -759,9 +784,30 @@ export function extractProjectTables(files: FileMap): ReportTable[] {
           const parsed = JSON.parse(itemVal);
           if (Array.isArray(parsed) && parsed.length > 0 && typeof parsed[0] === 'object') {
             const cleanKey = key.replace(/^db_|data_|local_/i, '').toLowerCase();
-            const existing = tables.find((t) => t.table_name === cleanKey || t.name.toLowerCase() === cleanKey);
+            const existing = tables.find(
+              (t) =>
+                t.table_name === cleanKey ||
+                t.name.toLowerCase() === cleanKey ||
+                t.table_name === cleanKey + 's' ||
+                t.table_name + 's' === cleanKey,
+            );
             if (existing) {
               existing.seed_data = parsed;
+              const inferred = inferAttributes(parsed);
+              inferred.forEach((attr) => {
+                if (!existing.attributes.some((a) => a.name === attr.name)) {
+                  existing.attributes.push(attr);
+                }
+              });
+            } else {
+              tables.push({
+                name: cleanKey.charAt(0).toUpperCase() + cleanKey.slice(1),
+                table_name: cleanKey,
+                description: `Tabla en vivo (${cleanKey})`,
+                attributes: inferAttributes(parsed),
+                seed_data: parsed,
+                source: `localStorage['${key}']`,
+              });
             }
           }
         } catch {

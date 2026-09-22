@@ -38,11 +38,27 @@ export function ReportsView() {
   const [injectedCode, setInjectedCode] = useState('');
   const [isInjecting, setIsInjecting] = useState(false);
   const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   // Extract tables from files and localStorage
   const tables: ReportTable[] = useMemo(() => {
     return extractProjectTables(files);
-  }, [files]);
+  }, [files, refreshTrigger]);
+
+  // Listen for storage and live data updates across browser and preview
+  useEffect(() => {
+    const handleStorageUpdate = () => {
+      setRefreshTrigger((prev) => prev + 1);
+    };
+
+    window.addEventListener('storage', handleStorageUpdate);
+    document.addEventListener('bolt-data-updated', handleStorageUpdate);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageUpdate);
+      document.removeEventListener('bolt-data-updated', handleStorageUpdate);
+    };
+  }, []);
 
   // Initial execution state
   const [result, setResult] = useState<ReportExecutionResult | null>(null);
@@ -131,10 +147,12 @@ export function ReportsView() {
     setIsEditingSql(false);
 
     try {
+      // Always re-extract fresh tables at the moment of query execution
+      const currentFreshTables = extractProjectTables(files);
       const effectiveTable = selectedTableFilter !== 'all' ? selectedTableFilter : activeDbTable;
       const { sql } = await resolveReportQueryWithExploration(
         textToRun,
-        tables,
+        currentFreshTables,
         (statusMsg) => {
           toast.info(statusMsg);
         },
@@ -143,8 +161,8 @@ export function ReportsView() {
 
       setCustomSql(sql);
 
-      // Execute SQL in memory using alaSQL
-      const queryResult = executeAlaSQL(sql, tables);
+      // Execute SQL in memory using alaSQL with fresh live data
+      const queryResult = executeAlaSQL(sql, currentFreshTables);
       setResult(queryResult);
 
       if (queryResult.chartConfig) {
@@ -162,7 +180,8 @@ export function ReportsView() {
   // Run manually edited SQL
   const handleRunCustomSql = () => {
     if (!customSql.trim()) return;
-    const queryResult = executeAlaSQL(customSql, tables);
+    const currentFreshTables = extractProjectTables(files);
+    const queryResult = executeAlaSQL(customSql, currentFreshTables);
     setResult(queryResult);
     if (queryResult.error) {
       toast.error(`Error SQL: ${queryResult.error}`);
@@ -360,6 +379,18 @@ export function ReportsView() {
             <span className="px-1.5 py-0.2 rounded text-[9px] font-bold uppercase bg-[#ff7a1a]/10 text-[#ff7a1a] border border-[#ff7a1a]/25">
               {plan.badge}
             </span>
+          </button>
+
+          <button
+            onClick={() => {
+              setRefreshTrigger((prev) => prev + 1);
+              toast.success('Base de datos refrescada');
+            }}
+            className="px-2.5 py-1.5 rounded-md text-xs font-medium bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border-zinc-300 dark:bg-[#1a1a17] dark:hover:bg-[#252520] dark:text-zinc-300 dark:border-[#2a2a25] border transition flex items-center gap-1.5 cursor-pointer shadow-xs"
+            title="Refrescar datos en vivo de la base de datos"
+          >
+            <span className="i-ph:arrows-clockwise text-sm text-[#ff7a1a]" />
+            <span>Refrescar</span>
           </button>
 
           <button
