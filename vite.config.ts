@@ -22,6 +22,7 @@ export default defineConfig((config) => {
     server: {
       host: '0.0.0.0',
       port: 5173,
+      allowedHosts: true,
     },
     plugins: [
       nodePolyfills({
