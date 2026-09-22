@@ -1,6 +1,6 @@
 services:
   app-prod:
-    image: bolt-ai:production
+    image: genui-studio:production
     build:
       context: .
       dockerfile: Dockerfile
