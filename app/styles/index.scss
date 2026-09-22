@@ -1,0 +1,112 @@
+@use 'variables.scss';
+@use 'z-index.scss';
+@use 'animations.scss';
+@use 'components/terminal.scss';
+@use 'components/resize-handle.scss';
+@use 'components/code.scss';
+@use 'components/editor.scss';
+@use 'components/toast.scss';
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  background-color: var(--bolt-elements-bg-depth-1);
+}
+
+button {
+  background-color: transparent;
+}
+
+:root,
+:root[data-theme='light'] {
+  --gradient-opacity: 0.8;
+  --primary-color: rgba(255, 122, 26, var(--gradient-opacity));
+  --secondary-color: rgba(201, 79, 0, var(--gradient-opacity));
+  --accent-color: rgba(255, 140, 58, var(--gradient-opacity));
+
+  --ws-bg: #ffffff;
+  --ws-panel: #f7f7f5;
+  --ws-panel-2: #eceae3;
+  --ws-line: #e2dfd7;
+  --ws-text: #111110;
+  --ws-text-dim: #5c5a53;
+  --ws-text-faint: #8c897f;
+  --ws-accent: #ff7a1a;
+  --ws-accent-dim: #fff2e8;
+  --sidebar-width: 248px;
+}
+
+:root[data-theme='dark'] {
+  --gradient-opacity: 0.8;
+  --primary-color: rgba(255, 122, 26, var(--gradient-opacity));
+  --secondary-color: rgba(201, 79, 0, var(--gradient-opacity));
+  --accent-color: rgba(255, 140, 58, var(--gradient-opacity));
+
+  --ws-bg: #0a0a09;
+  --ws-panel: #131311;
+  --ws-panel-2: #1a1a17;
+  --ws-line: #2a2a25;
+  --ws-text: #f2f0e9;
+  --ws-text-dim: #9a988e;
+  --ws-text-faint: #66645b;
+  --ws-accent: #ff7a1a;
+  --ws-accent-dim: #4a2c10;
+  --sidebar-width: 248px;
+}
+
+.font-grotesk {
+  font-family: 'Space Grotesk', -apple-system, sans-serif;
+}
+
+.font-mono-jb {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.modern-scrollbar {
+  overflow: auto;
+
+  // WebKit scrollbar styling
+  &::-webkit-scrollbar {
+    width: 2px;
+    height: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    // Use CSS variables for colors
+    background-color: var(--modern-scrollbar-thumb-background);
+    border-radius: 9999px; // pill shape
+    border: 2px solid transparent; // for padding-like effect
+    background-clip: content-box;
+    transition: background-color 0.2s ease-in-out; // Add transition
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    // Use CSS variable for hover color
+    background-color: var(--modern-scrollbar-thumb-backgroundHover);
+  }
+
+  // Firefox support
+  scrollbar-width: thin;
+  // Use CSS variables for Firefox colors
+  scrollbar-color: var(--modern-scrollbar-thumb-backgroundHover) transparent; // Use hover color for thumb for consistency
+}
+
+.modern-scrollbar-invert {
+  &::-webkit-scrollbar-thumb {
+    // Override with a contrasting color, e.g., primary text color with transparency
+    background-color: color-mix(in srgb, var(--bolt-elements-textPrimary), transparent 70%);
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    // Darker/more opaque version on hover
+    background-color: color-mix(in srgb, var(--bolt-elements-textPrimary), transparent 50%);
+  }
+
+  // Firefox support for inverted colors
+  scrollbar-color: color-mix(in srgb, var(--bolt-elements-textPrimary), transparent 50%) transparent;
+}
