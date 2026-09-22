@@ -5,10 +5,9 @@
   "license": "MIT",
   "sideEffects": false,
   "type": "module",
-  "version": "1.0.0",
   "author": {
-    "name": "bolt.diy team",
-    "email": "maintainers@bolt.diy"
+    "name": "GenUI Studio Team - Daniel Quispe, Paul Moreno, Josefina Condori, Jhoel Rodas, Jhaneth Velasquez",
+    "email": "dev@genuistudio.uagrm.edu.bo"
   },
   "scripts": {
     "deploy": "npm run build && wrangler pages deploy",

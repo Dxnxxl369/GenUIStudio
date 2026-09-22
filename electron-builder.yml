@@ -1,5 +1,5 @@
-appId: com.stackblitz.bolt.diy
-productName: Bolt Local
+appId: com.genuistudio.app
+productName: GenUI Studio
 directories:
   buildResources: build
   output: dist
