@@ -142,6 +142,15 @@ export default function App() {
       .catch((error) => {
         logStore.logError('Failed to initialize debug logging', error);
       });
+
+    // Initialize preview storage bridge and projectDB synchronization
+    import('./lib/persistence/projectDbSync')
+      .then(({ initStorageBridge }) => {
+        initStorageBridge();
+      })
+      .catch((err) => {
+        console.warn('Failed to initialize projectDbSync:', err);
+      });
   }, []);
 
   return (

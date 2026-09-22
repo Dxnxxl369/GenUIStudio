@@ -5,6 +5,7 @@ import JSZip from 'jszip';
 import { workbenchStore } from '~/lib/stores/workbench';
 import { chatId } from '~/lib/persistence/useChatHistory';
 import { classNames } from '~/utils/classNames';
+import { syncTableToIndexedDB, broadcastStorageToPreview } from '~/lib/persistence/projectDbSync';
 
 export interface ClassAttribute {
   name: string;
@@ -972,7 +973,7 @@ export function DatabaseView() {
       }
     }
 
-    // Merge with localStorage tables ONLY for tables already present in the project
+    // Merge with localStorage tables (both matching project files and newly created live tables)
     for (const lsTable of localStorageTables) {
       const idx = fileClasses.findIndex((c) => c.table_name === lsTable.table_name);
       if (idx !== -1) {
@@ -982,6 +983,8 @@ export function DatabaseView() {
           description: `${fileClasses[idx].description} • En vivo`,
           sourceType: 'localStorage',
         };
+      } else {
+        fileClasses.push(lsTable);
       }
     }
 
@@ -1017,6 +1020,17 @@ export function DatabaseView() {
       workbenchStore.selectedDatabaseTable.set(currentClass.table_name);
     }
   }, [currentClass?.table_name]);
+
+  // Automatically persist all detected project tables & seed data to IndexedDB ('projectDB')
+  useEffect(() => {
+    if (domainModel.classes && domainModel.classes.length > 0) {
+      domainModel.classes.forEach((cls) => {
+        if (cls.seed_data && cls.seed_data.length > 0) {
+          syncTableToIndexedDB(cls.table_name, cls.seed_data);
+        }
+      });
+    }
+  }, [domainModel.classes]);
 
   // Filter tables in sidebar
   const filteredClasses = useMemo(() => {
@@ -1120,12 +1134,16 @@ export function DatabaseView() {
   // Persist changes to project files and localStorage
   const persistChanges = async (updatedClasses: DomainClass[], activeClass?: DomainClass) => {
     try {
-      // 1. Sync active class to localStorage
-      if (activeClass && typeof window !== 'undefined' && window.localStorage) {
+      // 1. Sync active class to localStorage, IndexedDB ('projectDB'), and preview iframe
+      if (activeClass && typeof window !== 'undefined') {
         try {
-          window.localStorage.setItem(activeClass.table_name, JSON.stringify(activeClass.seed_data));
-          window.dispatchEvent(new Event('storage'));
-          document.dispatchEvent(new CustomEvent('bolt-data-updated'));
+          if (window.localStorage) {
+            window.localStorage.setItem(activeClass.table_name, JSON.stringify(activeClass.seed_data));
+            window.dispatchEvent(new Event('storage'));
+            document.dispatchEvent(new CustomEvent('bolt-data-updated'));
+          }
+          syncTableToIndexedDB(activeClass.table_name, activeClass.seed_data);
+          broadcastStorageToPreview(activeClass.table_name, JSON.stringify(activeClass.seed_data));
         } catch {
           // ignore quota
         }

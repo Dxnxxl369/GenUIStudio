@@ -284,8 +284,116 @@
   window.addEventListener('message', function(event) {
     if (event.data.type === 'INSPECTOR_ACTIVATE') {
       setInspectorActive(event.data.active);
+    } else if (event.data.type === 'BOLT_STORAGE_SET') {
+      try {
+        const { key, value } = event.data;
+        if (key && value !== undefined) {
+          localStorage.setItem(key, value);
+          window.dispatchEvent(new Event('storage'));
+        }
+      } catch (e) {}
     }
   });
+
+  // ==========================================
+  // Storage Synchronization to Parent Window
+  // ==========================================
+  function syncAllStorage() {
+    try {
+      const data = {};
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && !key.startsWith('bolt-') && !key.startsWith('sb-') && key !== 'theme') {
+          data[key] = localStorage.getItem(key);
+        }
+      }
+      if (Object.keys(data).length > 0) {
+        window.parent.postMessage({
+          type: 'BOLT_STORAGE_SYNC_BULK',
+          data: data
+        }, '*');
+      }
+    } catch (e) {}
+  }
+
+  // Intercept localStorage methods
+  try {
+    const originalSetItem = localStorage.setItem;
+    localStorage.setItem = function(key, value) {
+      originalSetItem.apply(this, arguments);
+      try {
+        window.parent.postMessage({
+          type: 'BOLT_STORAGE_SYNC',
+          action: 'set',
+          key: String(key),
+          value: String(value)
+        }, '*');
+      } catch (e) {}
+    };
+
+    const originalRemoveItem = localStorage.removeItem;
+    localStorage.removeItem = function(key) {
+      originalRemoveItem.apply(this, arguments);
+      try {
+        window.parent.postMessage({
+          type: 'BOLT_STORAGE_SYNC',
+          action: 'remove',
+          key: String(key)
+        }, '*');
+      } catch (e) {}
+    };
+
+    const originalClear = localStorage.clear;
+    localStorage.clear = function() {
+      originalClear.apply(this, arguments);
+      try {
+        window.parent.postMessage({
+          type: 'BOLT_STORAGE_SYNC',
+          action: 'clear'
+        }, '*');
+      } catch (e) {}
+    };
+  } catch (e) {
+    console.warn('[inspector] Storage interception failed:', e);
+  }
+
+  // Intercept IndexedDB in preview if used
+  try {
+    if (typeof IDBObjectStore !== 'undefined' && IDBObjectStore.prototype) {
+      const origPut = IDBObjectStore.prototype.put;
+      IDBObjectStore.prototype.put = function(value, key) {
+        const storeName = this.name;
+        const res = origPut.apply(this, arguments);
+        try {
+          window.parent.postMessage({
+            type: 'BOLT_IDB_SYNC_ROW',
+            store: storeName,
+            row: value
+          }, '*');
+        } catch (e) {}
+        return res;
+      };
+
+      const origAdd = IDBObjectStore.prototype.add;
+      IDBObjectStore.prototype.add = function(value, key) {
+        const storeName = this.name;
+        const res = origAdd.apply(this, arguments);
+        try {
+          window.parent.postMessage({
+            type: 'BOLT_IDB_SYNC_ROW',
+            store: storeName,
+            row: value
+          }, '*');
+        } catch (e) {}
+        return res;
+      };
+    }
+  } catch (e) {}
+
+  // Initial syncs
+  syncAllStorage();
+  setTimeout(syncAllStorage, 800);
+  setTimeout(syncAllStorage, 2500);
 
   // Auto-inject if inspector is already active
   window.parent.postMessage({ type: 'INSPECTOR_READY' }, '*');
