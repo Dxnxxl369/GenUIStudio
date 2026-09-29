@@ -400,7 +400,7 @@ export function ReportsView() {
       </div>
 
       {/* Main Container */}
-      <div className="flex-1 min-h-0 flex flex-col p-3 md:p-4 gap-2.5 bg-bolt-elements-background-depth-2 overflow-hidden">
+      <div className="flex-1 min-h-0 flex flex-col p-3 md:p-4 gap-2.5 bg-bolt-elements-background-depth-2 overflow-y-auto modern-scrollbar">
         {/* Natural Language Prompt & Speech Input Bar */}
         <div className="p-3 rounded-xl bg-bolt-elements-background-depth-1 border border-bolt-elements-borderColor shadow-xs space-y-2 shrink-0">
           <div className="flex items-center gap-2">
@@ -521,8 +521,8 @@ export function ReportsView() {
                 'grid gap-2.5',
                 result.kpis.length === 1 ? 'grid-cols-1' :
                 result.kpis.length === 2 ? 'grid-cols-2' :
-                result.kpis.length === 3 ? 'grid-cols-1 sm:grid-cols-3' :
-                'grid-cols-2 sm:grid-cols-4'
+                result.kpis.length === 3 ? 'grid-cols-3' :
+                'grid-cols-2 md:grid-cols-4'
               )}>
                 {result.kpis.map((kpi, idx) => (
                   <div
@@ -629,7 +629,7 @@ export function ReportsView() {
 
         {/* TAB CONTENT: 1. TABLE */}
         {activeTab === 'table' && (
-          <div className="flex-1 min-h-0 flex flex-col rounded-xl border border-bolt-elements-borderColor bg-bolt-elements-background-depth-1 overflow-hidden shadow-xs">
+          <div className="flex-1 min-h-[300px] flex flex-col rounded-xl border border-bolt-elements-borderColor bg-bolt-elements-background-depth-1 overflow-hidden shadow-xs">
             {/* Table Search & Filter Bar */}
             <div className="p-2.5 border-b border-bolt-elements-borderColor flex items-center justify-between gap-3 bg-bolt-elements-background-depth-2 shrink-0">
               <div className="relative flex-1 max-w-sm">
