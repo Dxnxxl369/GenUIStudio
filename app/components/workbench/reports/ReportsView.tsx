@@ -360,7 +360,7 @@ export function ReportsView() {
                 ANSI SQL + alaSQL
               </span>
             </div>
-            <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+            <p className="text-[11px] text-bolt-elements-textSecondary">
               Consulta bases de datos, mockData y memoria con lenguaje natural o voz
             </p>
           </div>
@@ -370,14 +370,14 @@ export function ReportsView() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setIsUpgradeModalOpen(true)}
-            className="hidden sm:flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-zinc-100 dark:bg-[#1a1a17] border border-zinc-200 dark:border-[#2a2a25] text-xs cursor-pointer hover:border-[#ff7a1a]/40 transition"
+            className="hidden sm:flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-bolt-elements-background-depth-2 border border-bolt-elements-borderColor text-xs cursor-pointer hover:border-[#ff7a1a]/40 transition"
             title="Cuota de consumo IA del usuario activo - Haz clic para ver planes"
           >
             <span className="i-ph:lightning-fill text-amber-500 text-xs" />
-            <span className="font-mono font-bold text-zinc-800 dark:text-zinc-200">
+            <span className="font-mono font-bold text-bolt-elements-textPrimary">
               {Math.max(user.creditsTotal - user.creditsUsed, 0).toLocaleString()}
             </span>
-            <span className="text-[10px] text-zinc-400 hidden lg:inline">créditos</span>
+            <span className="text-[10px] text-bolt-elements-textTertiary hidden lg:inline">créditos</span>
             <span className="px-1.5 py-0.2 rounded text-[9px] font-bold uppercase bg-[#ff7a1a]/10 text-[#ff7a1a] border border-[#ff7a1a]/25">
               {plan.badge}
             </span>
@@ -388,7 +388,7 @@ export function ReportsView() {
               setRefreshTrigger((prev) => prev + 1);
               toast.success('Base de datos refrescada');
             }}
-            className="px-2.5 py-1.5 rounded-md text-xs font-medium bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border-zinc-300 dark:bg-[#1a1a17] dark:hover:bg-[#252520] dark:text-zinc-300 dark:border-[#2a2a25] border transition flex items-center gap-1.5 cursor-pointer shadow-xs"
+            className="px-2.5 py-1.5 rounded-md text-xs font-medium bg-bolt-elements-background-depth-2 hover:bg-bolt-elements-background-depth-3 text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary border border-bolt-elements-borderColor transition flex items-center gap-1.5 cursor-pointer shadow-xs"
             title="Refrescar datos en vivo de la base de datos"
           >
             <span className="i-ph:arrows-clockwise text-sm text-[#ff7a1a]" />
@@ -397,7 +397,7 @@ export function ReportsView() {
 
           <button
             onClick={handleExportCSV}
-            className="px-2.5 py-1.5 rounded-md text-xs font-medium bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border-zinc-300 dark:bg-[#1a1a17] dark:hover:bg-[#252520] dark:text-zinc-300 dark:border-[#2a2a25] border transition flex items-center gap-1.5 cursor-pointer shadow-xs"
+            className="px-2.5 py-1.5 rounded-md text-xs font-medium bg-bolt-elements-background-depth-2 hover:bg-bolt-elements-background-depth-3 text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary border border-bolt-elements-borderColor transition flex items-center gap-1.5 cursor-pointer shadow-xs"
             title="Descargar datos en formato CSV"
           >
             <span className="i-ph:file-csv text-sm text-[#ff7a1a]" />
@@ -405,7 +405,7 @@ export function ReportsView() {
           </button>
           <button
             onClick={handleExportJSON}
-            className="px-2.5 py-1.5 rounded-md text-xs font-medium bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border-zinc-300 dark:bg-[#1a1a17] dark:hover:bg-[#252520] dark:text-zinc-300 dark:border-[#2a2a25] border transition flex items-center gap-1.5 cursor-pointer shadow-xs"
+            className="px-2.5 py-1.5 rounded-md text-xs font-medium bg-bolt-elements-background-depth-2 hover:bg-bolt-elements-background-depth-3 text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary border border-bolt-elements-borderColor transition flex items-center gap-1.5 cursor-pointer shadow-xs"
             title="Descargar datos en formato JSON"
           >
             <span className="i-ph:file-code text-sm text-[#ff7a1a]" />
@@ -417,7 +417,7 @@ export function ReportsView() {
               'px-3 py-1.5 rounded-md text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer shadow-sm',
               plan.hasCodeInjection
                 ? 'bg-gradient-to-r from-[#ff7a1a] to-[#ea580c] hover:from-[#f97316] hover:to-[#c2410c] text-white shadow-[#ff7a1a]/20'
-                : 'bg-zinc-100 dark:bg-[#1a1a17] text-zinc-600 dark:text-zinc-300 border border-zinc-300 dark:border-[#2a2a25] hover:border-amber-500/50',
+                : 'bg-bolt-elements-background-depth-2 text-bolt-elements-textSecondary border border-bolt-elements-borderColor hover:border-amber-500/50',
             )}
             title={plan.hasCodeInjection ? "Inyectar este reporte generado como un componente React en tu proyecto" : "Requiere Plan Pro Developer"}
           >
@@ -437,16 +437,16 @@ export function ReportsView() {
       </div>
 
       {/* Main Container */}
-      <div className="flex-1 min-h-0 flex flex-col p-3 md:p-4 gap-2.5 bg-zinc-50 dark:bg-[#0a0a09] overflow-hidden">
+      <div className="flex-1 min-h-0 flex flex-col p-3 md:p-4 gap-2.5 bg-bolt-elements-background-depth-2 overflow-hidden">
         {/* Natural Language Prompt & Speech Input Bar */}
-        <div className="p-3 rounded-xl bg-white dark:bg-[#131311] border border-zinc-200 dark:border-[#2a2a25] shadow-xs space-y-2 shrink-0">
+        <div className="p-3 rounded-xl bg-bolt-elements-background-depth-1 border border-bolt-elements-borderColor shadow-xs space-y-2 shrink-0">
           <div className="flex items-center gap-2">
             {/* Target Table Dropdown Selector */}
             <div className="relative shrink-0">
               <select
                 value={selectedTableFilter}
                 onChange={(e) => setSelectedTableFilter(e.target.value)}
-                className="px-2.5 py-1.5 text-xs rounded-lg bg-zinc-100 dark:bg-[#1a1a17] border border-zinc-200 dark:border-[#2a2a25] text-zinc-800 dark:text-[#f2f0e9] focus:outline-none focus:border-[#ff7a1a] cursor-pointer shadow-xs transition"
+                className="px-2.5 py-1.5 text-xs rounded-lg bg-bolt-elements-background-depth-2 border border-bolt-elements-borderColor text-bolt-elements-textPrimary focus:outline-none focus:border-[#ff7a1a] cursor-pointer shadow-xs transition"
                 title="Selecciona la tabla objetivo para consultar"
               >
                 <option value="all">🔍 Auto (Todas las tablas)</option>
@@ -467,13 +467,13 @@ export function ReportsView() {
                   if (e.key === 'Enter') handleRunQuery();
                 }}
                 placeholder="Ej: productos de categoría tela, solo nombre y categoría..."
-                className="w-full pl-9 pr-10 py-1.5 text-xs rounded-lg bg-zinc-100 dark:bg-[#1a1a17] border border-zinc-200 dark:border-[#2a2a25] text-zinc-900 dark:text-[#f2f0e9] placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:border-[#ff7a1a] transition font-sans"
+                className="w-full pl-9 pr-10 py-1.5 text-xs rounded-lg bg-bolt-elements-background-depth-2 border border-bolt-elements-borderColor text-bolt-elements-textPrimary placeholder-bolt-elements-textTertiary focus:outline-none focus:border-[#ff7a1a] transition font-sans"
               />
-              <span className="i-ph:sparkle absolute left-3 top-2 text-zinc-400 text-sm" />
+              <span className="i-ph:sparkle absolute left-3 top-2 text-bolt-elements-textTertiary text-sm" />
               {prompt && (
                 <button
                   onClick={() => setPrompt('')}
-                  className="absolute right-3 top-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-white"
+                  className="absolute right-3 top-2 text-bolt-elements-textTertiary hover:text-bolt-elements-textPrimary"
                 >
                   <span className="i-ph:x text-xs" />
                 </button>
@@ -487,7 +487,7 @@ export function ReportsView() {
                 'p-1.5 rounded-lg border text-sm transition flex items-center justify-center cursor-pointer',
                 isListening
                   ? 'bg-rose-500/20 border-rose-500/50 text-rose-400 animate-pulse ring-2 ring-rose-500/30'
-                  : 'bg-zinc-100 dark:bg-[#1a1a17] border-zinc-200 dark:border-[#2a2a25] text-zinc-600 dark:text-zinc-300 hover:text-[#ff7a1a] dark:hover:text-[#ff7a1a] hover:border-[#ff7a1a]/40',
+                  : 'bg-bolt-elements-background-depth-2 border-bolt-elements-borderColor text-bolt-elements-textSecondary hover:text-[#ff7a1a] hover:border-[#ff7a1a]/40',
               )}
               title={isListening ? 'Detener escucha de voz' : 'Hablar por micrófono (Voz a Texto)'}
             >
@@ -517,7 +517,7 @@ export function ReportsView() {
           {/* Quick Suggestions Pills (collapsible when table maximized) */}
           {!isCompactHeader && (
             <div className="flex flex-wrap items-center gap-1 text-xs pt-0.5">
-              <span className="text-[11px] text-zinc-500 dark:text-zinc-400 font-medium mr-1">Sugerencias:</span>
+              <span className="text-[11px] text-bolt-elements-textTertiary font-medium mr-1">Sugerencias:</span>
               {suggestionPills.map((pill, idx) => (
                 <button
                   key={idx}
@@ -526,7 +526,7 @@ export function ReportsView() {
                     setPrompt(cleanText);
                     handleRunQuery(cleanText);
                   }}
-                  className="px-2 py-0.5 rounded text-[11px] font-medium bg-zinc-100 hover:bg-zinc-200 text-zinc-700 hover:text-[#ff7a1a] border-zinc-200 dark:bg-[#1a1a17] dark:hover:bg-[#22221d] dark:text-zinc-300 dark:hover:text-[#ff7a1a] dark:border-[#2a2a25] border transition cursor-pointer"
+                  className="px-2 py-0.5 rounded text-[11px] font-medium bg-bolt-elements-background-depth-2 hover:bg-bolt-elements-background-depth-3 text-bolt-elements-textSecondary hover:text-[#ff7a1a] border border-bolt-elements-borderColor transition cursor-pointer"
                 >
                   {pill}
                 </button>
@@ -539,13 +539,13 @@ export function ReportsView() {
         {!isCompactHeader && result && result.kpis.length > 0 && (
           <div className="shrink-0 flex flex-col gap-1.5">
             <div className="flex items-center justify-between px-1">
-              <div className="flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400 font-semibold text-[11px] uppercase tracking-wider">
+              <div className="flex items-center gap-1.5 text-bolt-elements-textSecondary font-semibold text-[11px] uppercase tracking-wider">
                 <span className="i-ph:chart-polar text-sm text-[#ff7a1a]" />
                 <span>Métricas del Reporte ({result.kpis.length})</span>
               </div>
               <button
                 onClick={() => setShowKpis(!showKpis)}
-                className="flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium text-zinc-600 dark:text-zinc-300 hover:text-[#ff7a1a] dark:hover:text-[#ff7a1a] bg-zinc-100 hover:bg-zinc-200 dark:bg-[#1a1a17] dark:hover:bg-[#22221e] border border-zinc-200 dark:border-[#2a2a25] transition cursor-pointer shadow-xs"
+                className="flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium text-bolt-elements-textSecondary hover:text-[#ff7a1a] bg-bolt-elements-background-depth-2 hover:bg-bolt-elements-background-depth-3 border border-bolt-elements-borderColor transition cursor-pointer shadow-xs"
                 title={showKpis ? "Ocultar tarjetas para dar más espacio a la tabla" : "Mostrar tarjetas de métricas"}
               >
                 <span className={showKpis ? "i-ph:caret-up text-xs text-[#ff7a1a]" : "i-ph:caret-down text-xs text-[#ff7a1a]"} />
@@ -564,17 +564,17 @@ export function ReportsView() {
                 {result.kpis.map((kpi, idx) => (
                   <div
                     key={idx}
-                    className="p-3 rounded-xl bg-white dark:bg-[#131311] border border-zinc-200 dark:border-[#2a2a25] shadow-xs flex items-center justify-between gap-3 hover:border-[#ff7a1a]/30 transition"
+                    className="p-3 rounded-xl bg-bolt-elements-background-depth-1 border border-bolt-elements-borderColor shadow-xs flex items-center justify-between gap-3 hover:border-[#ff7a1a]/30 transition"
                   >
                     <div className="min-w-0 flex-1">
-                      <div className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider truncate mb-0.5">
+                      <div className="text-[10px] font-bold text-bolt-elements-textTertiary uppercase tracking-wider truncate mb-0.5">
                         {kpi.label}
                       </div>
-                      <div className="text-lg font-extrabold text-zinc-900 dark:text-[#f2f0e9] leading-tight truncate">
+                      <div className="text-lg font-extrabold text-bolt-elements-textPrimary leading-tight truncate">
                         {kpi.value}
                       </div>
                       {kpi.subtext && (
-                        <div className="text-[10px] text-zinc-400 dark:text-zinc-500 truncate mt-0.5">
+                        <div className="text-[10px] text-bolt-elements-textTertiary truncate mt-0.5">
                           {kpi.subtext}
                         </div>
                       )}
@@ -588,11 +588,11 @@ export function ReportsView() {
                 ))}
               </div>
             ) : (
-              <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-lg bg-zinc-100/70 dark:bg-[#161614] border border-zinc-200 dark:border-[#22221e] text-xs">
+              <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-lg bg-bolt-elements-background-depth-2 border border-bolt-elements-borderColor text-xs">
                 {result.kpis.map((kpi, idx) => (
-                  <div key={idx} className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-white dark:bg-[#1a1a17] border border-zinc-200 dark:border-[#2a2a25]">
-                    <span className="text-[10px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase">{kpi.label}:</span>
-                    <span className="font-bold text-zinc-900 dark:text-[#f2f0e9] text-xs">{kpi.value}</span>
+                  <div key={idx} className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-bolt-elements-background-depth-1 border border-bolt-elements-borderColor">
+                    <span className="text-[10px] font-semibold text-bolt-elements-textTertiary uppercase">{kpi.label}:</span>
+                    <span className="font-bold text-bolt-elements-textPrimary text-xs">{kpi.value}</span>
                   </div>
                 ))}
               </div>
@@ -601,7 +601,7 @@ export function ReportsView() {
         )}
 
         {/* View Tabs & Status Bar */}
-        <div className="flex items-center justify-between border-b border-zinc-200 dark:border-[#2a2a25] pb-2 shrink-0">
+        <div className="flex items-center justify-between border-b border-bolt-elements-borderColor pb-2 shrink-0">
           <div className="flex items-center gap-1.5">
             <button
               onClick={() => setActiveTab('table')}
@@ -609,7 +609,7 @@ export function ReportsView() {
                 'px-3 py-1.5 text-xs font-medium rounded-lg transition flex items-center gap-1.5 cursor-pointer',
                 activeTab === 'table'
                   ? 'bg-[#ff7a1a]/15 text-[#ff7a1a] border border-[#ff7a1a]/30 font-semibold'
-                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-[#1a1a17]',
+                  : 'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary hover:bg-bolt-elements-background-depth-2',
               )}
             >
               <span className="i-ph:table text-sm" />
@@ -621,7 +621,7 @@ export function ReportsView() {
                 'px-3 py-1.5 text-xs font-medium rounded-lg transition flex items-center gap-1.5 cursor-pointer',
                 activeTab === 'chart'
                   ? 'bg-[#ff7a1a]/15 text-[#ff7a1a] border border-[#ff7a1a]/30 font-semibold'
-                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-[#1a1a17]',
+                  : 'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary hover:bg-bolt-elements-background-depth-2',
               )}
             >
               <span className="i-ph:chart-bar text-sm" />
@@ -633,7 +633,7 @@ export function ReportsView() {
                 'px-3 py-1.5 text-xs font-medium rounded-lg transition flex items-center gap-1.5 cursor-pointer',
                 activeTab === 'sql'
                   ? 'bg-[#ff7a1a]/15 text-[#ff7a1a] border border-[#ff7a1a]/30 font-semibold'
-                  : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-[#1a1a17]',
+                  : 'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary hover:bg-bolt-elements-background-depth-2',
               )}
             >
               <span className="i-ph:terminal-window text-sm" />
@@ -643,11 +643,11 @@ export function ReportsView() {
 
           <div className="flex items-center gap-2 text-xs">
             {result && (
-              <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400 mr-1">
+              <div className="flex items-center gap-2 text-bolt-elements-textSecondary mr-1">
                 <span className="font-mono text-[11px]">
                   ⚡ {result.executionTimeMs} ms
                 </span>
-                <span className="text-zinc-400 dark:text-zinc-600">•</span>
+                <span className="text-bolt-elements-textTertiary">•</span>
                 <span className="text-[11px] text-[#ff7a1a] font-semibold">
                   {result.rows.length} registros
                 </span>
@@ -655,7 +655,7 @@ export function ReportsView() {
             )}
             <button
               onClick={() => setIsCompactHeader(!isCompactHeader)}
-              className="px-2 py-1 rounded-md text-[11px] font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white bg-zinc-100 hover:bg-zinc-200 dark:bg-[#1a1a17] dark:hover:bg-[#252520] border border-zinc-200 dark:border-[#2a2a25] flex items-center gap-1 transition cursor-pointer"
+              className="px-2 py-1 rounded-md text-[11px] font-medium text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary bg-bolt-elements-background-depth-2 hover:bg-bolt-elements-background-depth-3 border border-bolt-elements-borderColor flex items-center gap-1 transition cursor-pointer"
               title={isCompactHeader ? "Mostrar barra de sugerencias y tarjetas KPI" : "Maximizar área de tabla y datos"}
             >
               <span className={isCompactHeader ? "i-ph:arrows-out-simple text-xs text-[#ff7a1a]" : "i-ph:arrows-in-simple text-xs text-[#ff7a1a]"} />
@@ -666,20 +666,20 @@ export function ReportsView() {
 
         {/* TAB CONTENT: 1. TABLE */}
         {activeTab === 'table' && (
-          <div className="flex-1 min-h-0 flex flex-col rounded-xl border border-zinc-200 dark:border-[#2a2a25] bg-white dark:bg-[#131311] overflow-hidden shadow-xs">
+          <div className="flex-1 min-h-0 flex flex-col rounded-xl border border-bolt-elements-borderColor bg-bolt-elements-background-depth-1 overflow-hidden shadow-xs">
             {/* Table Search & Filter Bar */}
-            <div className="p-2.5 border-b border-zinc-200 dark:border-[#2a2a25] flex items-center justify-between gap-3 bg-zinc-50 dark:bg-[#181815] shrink-0">
+            <div className="p-2.5 border-b border-bolt-elements-borderColor flex items-center justify-between gap-3 bg-bolt-elements-background-depth-2 shrink-0">
               <div className="relative flex-1 max-w-sm">
                 <input
                   type="text"
                   placeholder="Filtrar en esta tabla..."
                   value={tableSearch}
                   onChange={(e) => setTableSearch(e.target.value)}
-                  className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg bg-white dark:bg-[#141412] border border-zinc-200 dark:border-[#2a2a25] text-zinc-900 dark:text-[#f2f0e9] placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-[#ff7a1a] focus:border-[#ff7a1a] transition"
+                  className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg bg-bolt-elements-background-depth-1 border border-bolt-elements-borderColor text-bolt-elements-textPrimary placeholder-bolt-elements-textTertiary focus:outline-none focus:ring-1 focus:ring-[#ff7a1a] focus:border-[#ff7a1a] transition"
                 />
-                <span className="i-ph:magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-400 text-xs pointer-events-none" />
+                <span className="i-ph:magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-bolt-elements-textTertiary text-xs pointer-events-none" />
               </div>
-              <span className="text-xs text-zinc-500 dark:text-zinc-400 font-medium">
+              <span className="text-xs text-bolt-elements-textSecondary font-medium">
                 Mostrando {filteredRows.length} de {result?.rows.length || 0} filas
               </span>
             </div>
@@ -688,13 +688,13 @@ export function ReportsView() {
             <div className="flex-1 min-h-[220px] overflow-auto modern-scrollbar relative">
               {result && result.columns.length > 0 ? (
                 <table className="w-full text-left text-xs border-collapse min-w-full">
-                  <thead className="sticky top-0 bg-zinc-100/95 dark:bg-[#181815] backdrop-blur text-zinc-700 dark:text-zinc-300 font-semibold border-b border-zinc-200 dark:border-[#2a2a25] select-none z-10 shadow-xs">
+                  <thead className="sticky top-0 bg-bolt-elements-background-depth-3 backdrop-blur text-bolt-elements-textSecondary font-semibold border-b border-bolt-elements-borderColor select-none z-10 shadow-xs">
                     <tr>
                       {result.columns.map((col) => (
                         <th
                           key={col}
                           onClick={() => handleSort(col)}
-                          className="px-4 py-2.5 uppercase tracking-wider text-[11px] font-semibold cursor-pointer hover:text-[#ff7a1a] transition whitespace-nowrap bg-zinc-100 dark:bg-[#181815]"
+                          className="px-4 py-2.5 uppercase tracking-wider text-[11px] font-semibold cursor-pointer hover:text-[#ff7a1a] transition whitespace-nowrap bg-bolt-elements-background-depth-3"
                         >
                           <div className="flex items-center gap-1.5">
                             <span>{col}</span>
@@ -711,21 +711,21 @@ export function ReportsView() {
                       ))}
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-zinc-200 dark:divide-[#22221d] font-sans">
+                  <tbody className="divide-y divide-bolt-elements-borderColor font-sans">
                     {filteredRows.map((row, rIdx) => (
-                      <tr key={rIdx} className="even:bg-zinc-50/50 dark:even:bg-[#161614]/40 hover:bg-zinc-100/70 dark:hover:bg-[#1f1f1b] transition-colors">
+                      <tr key={rIdx} className="even:bg-bolt-elements-background-depth-2/40 hover:bg-bolt-elements-item-backgroundActive transition-colors">
                         {result.columns.map((col) => {
                           const val = row[col];
                           const isBool = typeof val === 'boolean';
                           return (
-                            <td key={col} className="px-4 py-2.5 text-zinc-900 dark:text-zinc-100 whitespace-nowrap font-normal">
+                            <td key={col} className="px-4 py-2.5 text-bolt-elements-textPrimary whitespace-nowrap font-normal">
                               {isBool ? (
                                 <span
                                   className={classNames(
                                     'px-2 py-0.5 rounded-full text-[10px] font-semibold',
                                     val
                                       ? 'bg-[#ff7a1a]/15 text-[#ff7a1a] border border-[#ff7a1a]/30'
-                                      : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700',
+                                      : 'bg-bolt-elements-background-depth-2 text-bolt-elements-textTertiary border border-bolt-elements-borderColor',
                                   )}
                                 >
                                   {val ? 'SÍ (True)' : 'NO (False)'}
@@ -745,7 +745,7 @@ export function ReportsView() {
                   </tbody>
                 </table>
               ) : (
-                <div className="p-8 text-center text-zinc-500 dark:text-zinc-400 text-xs">
+                <div className="p-8 text-center text-bolt-elements-textTertiary text-xs">
                   {result?.error ? (
                     <div className="text-rose-500 font-mono">❌ {result.error}</div>
                   ) : (
@@ -759,25 +759,25 @@ export function ReportsView() {
 
         {/* TAB CONTENT: 2. CHART */}
         {activeTab === 'chart' && (
-          <div className="flex-1 min-h-0 p-4 md:p-5 rounded-xl border border-zinc-200 dark:border-[#2a2a25] bg-white dark:bg-[#131311] shadow-xs flex flex-col overflow-y-auto modern-scrollbar space-y-4">
-            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-[#2a2a25] pb-3">
+          <div className="flex-1 min-h-0 p-4 md:p-5 rounded-xl border border-bolt-elements-borderColor bg-bolt-elements-background-depth-1 shadow-xs flex flex-col overflow-y-auto modern-scrollbar space-y-4">
+            <div className="flex items-center justify-between border-b border-bolt-elements-borderColor pb-3">
               <div>
-                <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
+                <h3 className="text-sm font-semibold text-bolt-elements-textPrimary">
                   Distribución Visual: {result?.chartConfig?.labelColumn || 'Datos'} vs{' '}
                   {result?.chartConfig?.valueColumn || 'Métricas'}
                 </h3>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+                <p className="text-xs text-bolt-elements-textTertiary mt-0.5">
                   Visualización generativa calculada automáticamente
                 </p>
               </div>
 
               {/* Chart Type Selector */}
-              <div className="flex items-center gap-1 bg-zinc-100 dark:bg-[#1a1a17] p-1 rounded-lg border border-zinc-200 dark:border-[#2a2a25]">
+              <div className="flex items-center gap-1 bg-bolt-elements-background-depth-2 p-1 rounded-lg border border-bolt-elements-borderColor">
                 <button
                   onClick={() => setChartType('bar')}
                   className={classNames(
                     'px-2.5 py-1 rounded text-xs font-medium transition cursor-pointer',
-                    chartType === 'bar' ? 'bg-[#ff7a1a] text-white shadow-xs' : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white',
+                    chartType === 'bar' ? 'bg-[#ff7a1a] text-white shadow-xs' : 'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary',
                   )}
                 >
                   Barras
@@ -786,7 +786,7 @@ export function ReportsView() {
                   onClick={() => setChartType('pie')}
                   className={classNames(
                     'px-2.5 py-1 rounded text-xs font-medium transition cursor-pointer',
-                    chartType === 'pie' ? 'bg-[#ff7a1a] text-white shadow-xs' : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white',
+                    chartType === 'pie' ? 'bg-[#ff7a1a] text-white shadow-xs' : 'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary',
                   )}
                 >
                   Dona / Pie
@@ -795,7 +795,7 @@ export function ReportsView() {
                   onClick={() => setChartType('line')}
                   className={classNames(
                     'px-2.5 py-1 rounded text-xs font-medium transition cursor-pointer',
-                    chartType === 'line' ? 'bg-[#ff7a1a] text-white shadow-xs' : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white',
+                    chartType === 'line' ? 'bg-[#ff7a1a] text-white shadow-xs' : 'text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary',
                   )}
                 >
                   Líneas
@@ -815,10 +815,10 @@ export function ReportsView() {
                         const pct = Math.round((val / maxVal) * 100);
                         return (
                           <div key={idx} className="flex items-center gap-3 text-xs">
-                            <span className="w-40 truncate font-medium text-zinc-700 dark:text-zinc-300 text-right">
+                            <span className="w-40 truncate font-medium text-bolt-elements-textSecondary text-right">
                               {lbl}
                             </span>
-                            <div className="flex-1 bg-zinc-100 dark:bg-[#1a1a17] rounded-full h-5 overflow-hidden relative">
+                            <div className="flex-1 bg-bolt-elements-background-depth-2 rounded-full h-5 overflow-hidden relative">
                               <div
                                 className="bg-gradient-to-r from-[#ff7a1a] to-[#ea580c] h-full rounded-full transition-all duration-500"
                                 style={{ width: `${pct}%` }}
@@ -873,8 +873,8 @@ export function ReportsView() {
                               className="w-3 h-3 rounded-full shrink-0"
                               style={{ backgroundColor: colors[idx % colors.length] }}
                             />
-                            <span className="text-zinc-700 dark:text-zinc-300 truncate max-w-[200px]">{lbl}</span>
-                            <span className="font-mono text-zinc-500 dark:text-zinc-400">
+                            <span className="text-bolt-elements-textSecondary truncate max-w-[200px]">{lbl}</span>
+                            <span className="font-mono text-bolt-elements-textTertiary">
                               ({result.chartConfig!.values[idx]})
                             </span>
                           </div>
@@ -885,7 +885,7 @@ export function ReportsView() {
                 )}
 
                 {chartType === 'line' && (
-                  <div className="h-64 flex items-end gap-3 pt-8 pb-4 border-b border-zinc-200 dark:border-[#2a2a25]">
+                  <div className="h-64 flex items-end gap-3 pt-8 pb-4 border-b border-bolt-elements-borderColor">
                     {(() => {
                       const maxVal = Math.max(...result.chartConfig.values, 1);
                       return result.chartConfig.labels.map((lbl, idx) => {
@@ -900,7 +900,7 @@ export function ReportsView() {
                               className="w-full bg-gradient-to-t from-[#ff7a1a] to-[#ea580c] rounded-t-md transition-all duration-500"
                               style={{ height: `${pct}%` }}
                             />
-                            <span className="text-[10px] text-zinc-500 dark:text-zinc-400 truncate max-w-[60px] text-center">
+                            <span className="text-[10px] text-bolt-elements-textTertiary truncate max-w-[60px] text-center">
                               {lbl}
                             </span>
                           </div>
@@ -911,7 +911,7 @@ export function ReportsView() {
                 )}
               </div>
             ) : (
-              <div className="p-8 text-center text-zinc-500 dark:text-zinc-400 text-xs">
+              <div className="p-8 text-center text-bolt-elements-textTertiary text-xs">
                 Esta consulta no contiene columnas categóricas o numéricas adecuadas para graficar directamente.
               </div>
             )}
@@ -920,16 +920,16 @@ export function ReportsView() {
 
         {/* TAB CONTENT: 3. SQL QUERY */}
         {activeTab === 'sql' && (
-          <div className="flex-1 min-h-0 p-4 rounded-xl border border-zinc-200 dark:border-[#2a2a25] bg-white dark:bg-[#131311] shadow-xs flex flex-col overflow-y-auto modern-scrollbar space-y-3">
+          <div className="flex-1 min-h-0 p-4 rounded-xl border border-bolt-elements-borderColor bg-bolt-elements-background-depth-1 shadow-xs flex flex-col overflow-y-auto modern-scrollbar space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="i-ph:terminal text-base text-[#ff7a1a]" />
-                <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">Consulta ANSI SQL Generada</h3>
+                <h3 className="text-sm font-semibold text-bolt-elements-textPrimary">Consulta ANSI SQL Generada</h3>
               </div>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setIsEditingSql(!isEditingSql)}
-                  className="px-2.5 py-1 text-xs font-medium rounded-md bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-200 dark:bg-[#1a1a17] dark:hover:bg-[#252520] dark:text-zinc-300 dark:border-[#2a2a25] transition cursor-pointer"
+                  className="px-2.5 py-1 text-xs font-medium rounded-md bg-bolt-elements-background-depth-2 hover:bg-bolt-elements-background-depth-3 text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary border border-bolt-elements-borderColor transition cursor-pointer"
                 >
                   {isEditingSql ? 'Cancelar Edición' : 'Editar SQL'}
                 </button>
@@ -938,7 +938,7 @@ export function ReportsView() {
                     navigator.clipboard.writeText(customSql || result?.sql || '');
                     toast.success('SQL copiado al portapapeles');
                   }}
-                  className="px-2.5 py-1 text-xs font-medium rounded-md bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-200 dark:bg-[#1a1a17] dark:hover:bg-[#252520] dark:text-zinc-300 dark:border-[#2a2a25] transition flex items-center gap-1 cursor-pointer"
+                  className="px-2.5 py-1 text-xs font-medium rounded-md bg-bolt-elements-background-depth-2 hover:bg-bolt-elements-background-depth-3 text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary border border-bolt-elements-borderColor transition flex items-center gap-1 cursor-pointer"
                 >
                   <span className="i-ph:copy text-xs" />
                   <span>Copiar</span>
@@ -952,7 +952,7 @@ export function ReportsView() {
                   value={customSql}
                   onChange={(e) => setCustomSql(e.target.value)}
                   rows={4}
-                  className="w-full p-3 font-mono text-xs rounded-lg bg-zinc-900 dark:bg-[#0a0a09] border border-zinc-300 dark:border-[#2a2a25] text-[#ff7a1a] focus:outline-none focus:border-[#ff7a1a]"
+                  className="w-full p-3 font-mono text-xs rounded-lg bg-bolt-elements-background-depth-2 border border-bolt-elements-borderColor text-[#ff7a1a] focus:outline-none focus:border-[#ff7a1a]"
                 />
                 <button
                   onClick={handleRunCustomSql}
@@ -963,18 +963,18 @@ export function ReportsView() {
                 </button>
               </div>
             ) : (
-              <div className="p-4 rounded-lg bg-zinc-900 dark:bg-[#0a0a09] border border-zinc-300 dark:border-[#2a2a25] text-xs font-mono text-[#ff7a1a] overflow-x-auto shadow-inner">
+              <div className="p-4 rounded-lg bg-bolt-elements-background-depth-2 border border-bolt-elements-borderColor text-xs font-mono text-[#ff7a1a] overflow-x-auto shadow-inner">
                 <code>{customSql || result?.sql || 'SELECT * FROM juegos'}</code>
               </div>
             )}
 
-            <div className="text-xs text-zinc-500 dark:text-zinc-400 space-y-1 pt-2">
-              <span className="font-semibold text-zinc-700 dark:text-zinc-300">Tablas registradas en alaSQL:</span>
+            <div className="text-xs text-bolt-elements-textTertiary space-y-1 pt-2">
+              <span className="font-semibold text-bolt-elements-textSecondary">Tablas registradas en alaSQL:</span>
               <div className="flex flex-wrap gap-1.5 mt-1">
                 {tables.map((t) => (
                   <span
                     key={t.table_name}
-                    className="px-2 py-0.5 rounded text-[11px] font-mono bg-zinc-100 dark:bg-[#1a1a17] text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-[#2a2a25]"
+                    className="px-2 py-0.5 rounded text-[11px] font-mono bg-bolt-elements-background-depth-2 text-bolt-elements-textSecondary border border-bolt-elements-borderColor"
                   >
                     {t.table_name} ({t.seed_data.length} filas)
                   </span>
@@ -988,34 +988,34 @@ export function ReportsView() {
       {/* CODE INJECTION MODAL */}
       {showInjectModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs p-4">
-          <div className="bg-white dark:bg-[#131311] border border-zinc-200 dark:border-[#2a2a25] rounded-2xl max-w-2xl w-full p-6 shadow-2xl flex flex-col space-y-4">
-            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-[#2a2a25] pb-3">
+          <div className="bg-bolt-elements-background-depth-1 border border-bolt-elements-borderColor rounded-2xl max-w-2xl w-full p-6 shadow-2xl flex flex-col space-y-4">
+            <div className="flex items-center justify-between border-b border-bolt-elements-borderColor pb-3">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-lg bg-[#ff7a1a]/15 text-[#ff7a1a] flex items-center justify-center">
                   <span className="i-ph:rocket-launch text-base" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-zinc-900 dark:text-white">Inyectar Reporte en el Proyecto</h3>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                  <h3 className="text-base font-bold text-bolt-elements-textPrimary">Inyectar Reporte en el Proyecto</h3>
+                  <p className="text-xs text-bolt-elements-textTertiary">
                     Se creará el componente React autónomo en <code className="text-[#ff7a1a]">src/components/GeneratedReport.jsx</code>
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setShowInjectModal(false)}
-                className="text-zinc-400 hover:text-zinc-600 dark:hover:text-white"
+                className="text-bolt-elements-textTertiary hover:text-bolt-elements-textPrimary"
               >
                 <span className="i-ph:x text-base" />
               </button>
             </div>
 
-            <div className="p-3 bg-zinc-50 dark:bg-[#0a0a09] border border-zinc-200 dark:border-[#2a2a25] rounded-xl max-h-60 overflow-y-auto">
-              <pre className="text-[11px] font-mono text-zinc-800 dark:text-zinc-200 leading-relaxed">
+            <div className="p-3 bg-bolt-elements-background-depth-2 border border-bolt-elements-borderColor rounded-xl max-h-60 overflow-y-auto">
+              <pre className="text-[11px] font-mono text-bolt-elements-textPrimary leading-relaxed">
                 {injectedCode}
               </pre>
             </div>
 
-            <div className="text-xs text-zinc-600 dark:text-zinc-300 bg-orange-500/10 p-3 rounded-lg border border-[#ff7a1a]/20 flex items-start gap-2">
+            <div className="text-xs text-bolt-elements-textSecondary bg-[#ff7a1a]/10 p-3 rounded-lg border border-[#ff7a1a]/20 flex items-start gap-2">
               <span className="i-ph:info text-sm text-[#ff7a1a] shrink-0 mt-0.5" />
               <span>
                 Este componente contiene las tarjetas KPI, el gráfico visual SVG, la tabla con filtro reactivo y el botón para exportar a CSV, listo para ser utilizado en cualquier vista de tu aplicación.
@@ -1025,7 +1025,7 @@ export function ReportsView() {
             <div className="flex items-center justify-end gap-3 pt-2">
               <button
                 onClick={() => setShowInjectModal(false)}
-                className="px-4 py-2 text-xs font-medium rounded-lg text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-[#1a1a17] transition cursor-pointer"
+                className="px-4 py-2 text-xs font-medium rounded-lg text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary hover:bg-bolt-elements-background-depth-2 transition cursor-pointer"
               >
                 Cancelar
               </button>
