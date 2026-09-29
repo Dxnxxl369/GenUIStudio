@@ -270,19 +270,46 @@ export function ReportsView() {
     }
   };
 
-  // Export CSV
+  // Export CSV optimizado para Microsoft Excel y suites ofimáticas (UTF-8 BOM y delimitador para español)
   const handleExportCSV = () => {
     if (!result || result.rows.length === 0) {
       toast.warn('No hay datos para exportar');
       return;
     }
-    const headers = result.columns.join(',');
+
+    // En Windows y Excel en español/latinoamérica/Europa, el separador de columnas estándar es ';'
+    // ya que la coma ',' se reserva para decimales. Usar ';' asegura que Excel distribuya
+    // cada dato en su columna correspondiente (A, B, C...) y no agrupe todo en la columna A.
+    const separator = ';';
+
+    const headers = result.columns
+      .map((col) => `"${String(col).replace(/"/g, '""')}"`)
+      .join(separator);
+
     const rows = result.rows.map((r) =>
       result.columns
-        .map((col) => `"${String(r[col] ?? '').replace(/"/g, '""')}"`)
-        .join(',')
+        .map((col) => {
+          const val = r[col];
+          if (val === null || val === undefined) return '""';
+          if (typeof val === 'number') return String(val);
+          if (typeof val === 'boolean') return val ? '"SÍ"' : '"NO"';
+          if (Array.isArray(val)) {
+            const arrStr = val.map((item) => String(item ?? '').replace(/"/g, '""')).join(', ');
+            return `"${arrStr}"`;
+          }
+          if (typeof val === 'object') {
+            return `"${JSON.stringify(val).replace(/"/g, '""')}"`;
+          }
+          // Limpiar saltos de línea para que cada registro ocupe exactamente 1 fila en la hoja de cálculo
+          const cleanStr = String(val).replace(/[\r\n]+/g, ' ').replace(/"/g, '""');
+          return `"${cleanStr}"`;
+        })
+        .join(separator)
     );
-    const blob = new Blob([headers + '\n' + rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+
+    // Anteponer el BOM UTF-8 (\ufeff) para que Excel detecte correctamente acentos, eñes y caracteres especiales
+    const csvContent = '\ufeff' + [headers, ...rows].join('\r\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;

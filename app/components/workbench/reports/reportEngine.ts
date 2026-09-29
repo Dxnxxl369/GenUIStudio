@@ -1481,23 +1481,41 @@ export function ${componentName}() {
 
   const maxChartVal = Math.max(...chartValues, 1);
 
-  // Exportar a CSV
+  // Exportar a CSV compatible con Microsoft Excel (UTF-8 BOM y punto y coma)
   const handleExportCSV = () => {
     if (!filteredData.length) return;
-    const headers = Object.keys(filteredData[0]).join(',');
+    const cols = Object.keys(filteredData[0]);
+    const separator = ';';
+    const headers = cols.map((col) => \`"\${String(col).replace(/"/g, '""')}"\`).join(separator);
     const rows = filteredData.map((r) =>
-      Object.values(r)
-        .map((v) => \`"\${String(v).replace(/"/g, '""')}"\`)
-        .join(',')
+      cols
+        .map((col) => {
+          const val = r[col];
+          if (val === null || val === undefined) return '""';
+          if (typeof val === 'number') return String(val);
+          if (typeof val === 'boolean') return val ? '"SÍ"' : '"NO"';
+          if (Array.isArray(val)) {
+            const arrStr = val.map((item) => String(item ?? '').replace(/"/g, '""')).join(', ');
+            return \`"\${arrStr}"\`;
+          }
+          if (typeof val === 'object') {
+            return \`"\${JSON.stringify(val).replace(/"/g, '""')}"\`;
+          }
+          const cleanStr = String(val).replace(/[\\r\\n]+/g, ' ').replace(/"/g, '""');
+          return \`"\${cleanStr}"\`;
+        })
+        .join(separator)
     );
-    const csvContent = 'data:text/csv;charset=utf-8,' + [headers, ...rows].join('\\n');
-    const encodedUri = encodeURI(csvContent);
+    const csvContent = '\\ufeff' + [headers, ...rows].join('\\r\\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'reporte_generado.csv');
+    link.href = url;
+    link.download = 'reporte_generado.csv';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   return (
