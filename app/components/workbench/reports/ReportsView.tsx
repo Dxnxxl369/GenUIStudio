@@ -39,6 +39,7 @@ export function ReportsView() {
   const [isInjecting, setIsInjecting] = useState(false);
   const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [isCompactHeader, setIsCompactHeader] = useState(false);
 
   // Extract tables from files and localStorage
   const tables: ReportTable[] = useMemo(() => {
@@ -435,16 +436,16 @@ export function ReportsView() {
       </div>
 
       {/* Main Container */}
-      <div className="flex-1 flex flex-col p-4 space-y-4 overflow-y-auto bg-zinc-50 dark:bg-[#0a0a09]">
+      <div className="flex-1 min-h-0 flex flex-col p-3 md:p-4 gap-2.5 bg-zinc-50 dark:bg-[#0a0a09] overflow-hidden">
         {/* Natural Language Prompt & Speech Input Bar */}
-        <div className="p-3.5 rounded-xl bg-white dark:bg-[#131311] border border-zinc-200 dark:border-[#2a2a25] shadow-xs space-y-2.5">
+        <div className="p-3 rounded-xl bg-white dark:bg-[#131311] border border-zinc-200 dark:border-[#2a2a25] shadow-xs space-y-2 shrink-0">
           <div className="flex items-center gap-2">
             {/* Target Table Dropdown Selector */}
             <div className="relative shrink-0">
               <select
                 value={selectedTableFilter}
                 onChange={(e) => setSelectedTableFilter(e.target.value)}
-                className="px-2.5 py-2 text-xs rounded-lg bg-zinc-100 dark:bg-[#1a1a17] border border-zinc-200 dark:border-[#2a2a25] text-zinc-800 dark:text-[#f2f0e9] focus:outline-none focus:border-[#ff7a1a] cursor-pointer shadow-xs transition"
+                className="px-2.5 py-1.5 text-xs rounded-lg bg-zinc-100 dark:bg-[#1a1a17] border border-zinc-200 dark:border-[#2a2a25] text-zinc-800 dark:text-[#f2f0e9] focus:outline-none focus:border-[#ff7a1a] cursor-pointer shadow-xs transition"
                 title="Selecciona la tabla objetivo para consultar"
               >
                 <option value="all">🔍 Auto (Todas las tablas)</option>
@@ -465,13 +466,13 @@ export function ReportsView() {
                   if (e.key === 'Enter') handleRunQuery();
                 }}
                 placeholder="Ej: productos de categoría tela, solo nombre y categoría..."
-                className="w-full pl-9 pr-10 py-2 text-xs rounded-lg bg-zinc-100 dark:bg-[#1a1a17] border border-zinc-200 dark:border-[#2a2a25] text-zinc-900 dark:text-[#f2f0e9] placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:border-[#ff7a1a] transition font-sans"
+                className="w-full pl-9 pr-10 py-1.5 text-xs rounded-lg bg-zinc-100 dark:bg-[#1a1a17] border border-zinc-200 dark:border-[#2a2a25] text-zinc-900 dark:text-[#f2f0e9] placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:border-[#ff7a1a] transition font-sans"
               />
-              <span className="i-ph:sparkle absolute left-3 top-2.5 text-zinc-400 text-sm" />
+              <span className="i-ph:sparkle absolute left-3 top-2 text-zinc-400 text-sm" />
               {prompt && (
                 <button
                   onClick={() => setPrompt('')}
-                  className="absolute right-3 top-2.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-white"
+                  className="absolute right-3 top-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-white"
                 >
                   <span className="i-ph:x text-xs" />
                 </button>
@@ -482,7 +483,7 @@ export function ReportsView() {
             <button
               onClick={toggleSpeech}
               className={classNames(
-                'p-2 rounded-lg border text-sm transition flex items-center justify-center cursor-pointer',
+                'p-1.5 rounded-lg border text-sm transition flex items-center justify-center cursor-pointer',
                 isListening
                   ? 'bg-rose-500/20 border-rose-500/50 text-rose-400 animate-pulse ring-2 ring-rose-500/30'
                   : 'bg-zinc-100 dark:bg-[#1a1a17] border-zinc-200 dark:border-[#2a2a25] text-zinc-600 dark:text-zinc-300 hover:text-[#ff7a1a] dark:hover:text-[#ff7a1a] hover:border-[#ff7a1a]/40',
@@ -496,7 +497,7 @@ export function ReportsView() {
             <button
               onClick={() => handleRunQuery()}
               disabled={isGenerating || !prompt.trim()}
-              className="px-4 py-2 rounded-lg text-xs font-semibold bg-[#ff7a1a] hover:bg-[#ea580c] disabled:opacity-50 text-white transition flex items-center gap-1.5 cursor-pointer shadow-xs shadow-[#ff7a1a]/20"
+              className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#ff7a1a] hover:bg-[#ea580c] disabled:opacity-50 text-white transition flex items-center gap-1.5 cursor-pointer shadow-xs shadow-[#ff7a1a]/20 shrink-0"
             >
               {isGenerating ? (
                 <>
@@ -512,46 +513,58 @@ export function ReportsView() {
             </button>
           </div>
 
-          {/* Quick Suggestions Pills */}
-          <div className="flex flex-wrap items-center gap-1.5 text-xs">
-            <span className="text-[11px] text-zinc-500 dark:text-zinc-400 font-medium mr-1">Sugerencias rápidas:</span>
-            {suggestionPills.map((pill, idx) => (
-              <button
-                key={idx}
-                onClick={() => {
-                  const cleanText = pill.replace(/^[^\wáéíóúÁÉÍÓÚ]+/, '').trim();
-                  setPrompt(cleanText);
-                  handleRunQuery(cleanText);
-                }}
-                className="px-2 py-1 rounded-md text-[11px] font-medium bg-zinc-100 hover:bg-zinc-200 text-zinc-700 hover:text-[#ff7a1a] border-zinc-200 dark:bg-[#1a1a17] dark:hover:bg-[#22221d] dark:text-zinc-300 dark:hover:text-[#ff7a1a] dark:border-[#2a2a25] border transition cursor-pointer"
-              >
-                {pill}
-              </button>
-            ))}
-          </div>
+          {/* Quick Suggestions Pills (collapsible when table maximized) */}
+          {!isCompactHeader && (
+            <div className="flex flex-wrap items-center gap-1 text-xs pt-0.5">
+              <span className="text-[11px] text-zinc-500 dark:text-zinc-400 font-medium mr-1">Sugerencias:</span>
+              {suggestionPills.map((pill, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => {
+                    const cleanText = pill.replace(/^[^\wáéíóúÁÉÍÓÚ]+/, '').trim();
+                    setPrompt(cleanText);
+                    handleRunQuery(cleanText);
+                  }}
+                  className="px-2 py-0.5 rounded text-[11px] font-medium bg-zinc-100 hover:bg-zinc-200 text-zinc-700 hover:text-[#ff7a1a] border-zinc-200 dark:bg-[#1a1a17] dark:hover:bg-[#22221d] dark:text-zinc-300 dark:hover:text-[#ff7a1a] dark:border-[#2a2a25] border transition cursor-pointer"
+                >
+                  {pill}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Executive KPI Metric Cards */}
-        {result && result.kpis.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        {/* Executive KPI Metric Cards (Compact & sleek) */}
+        {!isCompactHeader && result && result.kpis.length > 0 && (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 shrink-0">
             {result.kpis.map((kpi, idx) => (
               <div
                 key={idx}
-                className="p-3.5 rounded-xl bg-white dark:bg-[#131311] border border-zinc-200 dark:border-[#2a2a25] shadow-xs flex flex-col justify-between"
+                className="px-3 py-2 rounded-xl bg-white dark:bg-[#131311] border border-zinc-200 dark:border-[#2a2a25] shadow-xs flex items-center justify-between gap-2"
               >
-                <div className="flex items-center justify-between text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
-                  <span>{kpi.label}</span>
-                  {kpi.icon && <span className={classNames(kpi.icon, 'text-sm text-[#ff7a1a]')} />}
+                <div className="min-w-0">
+                  <span className="text-[10px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider block truncate">
+                    {kpi.label}
+                  </span>
+                  <div className="text-base font-bold text-zinc-900 dark:text-[#f2f0e9] leading-tight">
+                    {kpi.value}
+                  </div>
+                  {kpi.subtext && (
+                    <span className="text-[10px] text-zinc-400 dark:text-zinc-500 block truncate">
+                      {kpi.subtext}
+                    </span>
+                  )}
                 </div>
-                <div className="text-xl font-bold text-zinc-900 dark:text-[#f2f0e9] mt-1 mb-0.5">{kpi.value}</div>
-                {kpi.subtext && <span className="text-[11px] text-zinc-400 dark:text-zinc-500 font-medium">{kpi.subtext}</span>}
+                {kpi.icon && (
+                  <span className={classNames(kpi.icon, 'text-lg text-[#ff7a1a] shrink-0')} />
+                )}
               </div>
             ))}
           </div>
         )}
 
         {/* View Tabs & Status Bar */}
-        <div className="flex items-center justify-between border-b border-zinc-200 dark:border-[#2a2a25] pb-2">
+        <div className="flex items-center justify-between border-b border-zinc-200 dark:border-[#2a2a25] pb-2 shrink-0">
           <div className="flex items-center gap-1.5">
             <button
               onClick={() => setActiveTab('table')}
@@ -591,24 +604,34 @@ export function ReportsView() {
             </button>
           </div>
 
-          {result && (
-            <div className="flex items-center gap-3 text-xs text-zinc-500 dark:text-zinc-400">
-              <span className="font-mono text-[11px]">
-                ⚡ {result.executionTimeMs} ms
-              </span>
-              <span className="text-zinc-400 dark:text-zinc-600">•</span>
-              <span className="text-[11px] text-[#ff7a1a] font-semibold">
-                {result.rows.length} registros
-              </span>
-            </div>
-          )}
+          <div className="flex items-center gap-2 text-xs">
+            {result && (
+              <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400 mr-1">
+                <span className="font-mono text-[11px]">
+                  ⚡ {result.executionTimeMs} ms
+                </span>
+                <span className="text-zinc-400 dark:text-zinc-600">•</span>
+                <span className="text-[11px] text-[#ff7a1a] font-semibold">
+                  {result.rows.length} registros
+                </span>
+              </div>
+            )}
+            <button
+              onClick={() => setIsCompactHeader(!isCompactHeader)}
+              className="px-2 py-1 rounded-md text-[11px] font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white bg-zinc-100 hover:bg-zinc-200 dark:bg-[#1a1a17] dark:hover:bg-[#252520] border border-zinc-200 dark:border-[#2a2a25] flex items-center gap-1 transition cursor-pointer"
+              title={isCompactHeader ? "Mostrar barra de sugerencias y tarjetas KPI" : "Maximizar área de tabla y datos"}
+            >
+              <span className={isCompactHeader ? "i-ph:arrows-out-simple text-xs text-[#ff7a1a]" : "i-ph:arrows-in-simple text-xs text-[#ff7a1a]"} />
+              <span className="hidden sm:inline">{isCompactHeader ? "Restaurar" : "Maximizar"}</span>
+            </button>
+          </div>
         </div>
 
         {/* TAB CONTENT: 1. TABLE */}
         {activeTab === 'table' && (
-          <div className="flex-1 flex flex-col rounded-xl border border-zinc-200 dark:border-[#2a2a25] bg-white dark:bg-[#131311] overflow-hidden shadow-xs">
+          <div className="flex-1 min-h-0 flex flex-col rounded-xl border border-zinc-200 dark:border-[#2a2a25] bg-white dark:bg-[#131311] overflow-hidden shadow-xs">
             {/* Table Search & Filter Bar */}
-            <div className="p-2.5 border-b border-zinc-200 dark:border-[#2a2a25] flex items-center justify-between gap-3 bg-zinc-50 dark:bg-[#181815]">
+            <div className="p-2.5 border-b border-zinc-200 dark:border-[#2a2a25] flex items-center justify-between gap-3 bg-zinc-50 dark:bg-[#181815] shrink-0">
               <div className="relative flex-1 max-w-xs">
                 <input
                   type="text"
@@ -624,17 +647,17 @@ export function ReportsView() {
               </span>
             </div>
 
-            {/* Table Data Grid */}
-            <div className="flex-1 overflow-auto max-h-[500px]">
+            {/* Table Data Grid - Adaptive Full Height with Smooth Scroll */}
+            <div className="flex-1 min-h-0 overflow-auto modern-scrollbar relative">
               {result && result.columns.length > 0 ? (
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead className="sticky top-0 bg-zinc-100/90 dark:bg-[#1a1a17]/90 backdrop-blur text-zinc-700 dark:text-zinc-300 font-semibold border-b border-zinc-200 dark:border-[#2a2a25] select-none z-10">
+                <table className="w-full text-left text-xs border-collapse min-w-full">
+                  <thead className="sticky top-0 bg-zinc-100/95 dark:bg-[#1a1a17]/95 backdrop-blur text-zinc-700 dark:text-zinc-300 font-semibold border-b border-zinc-200 dark:border-[#2a2a25] select-none z-10 shadow-xs">
                     <tr>
                       {result.columns.map((col) => (
                         <th
                           key={col}
                           onClick={() => handleSort(col)}
-                          className="px-4 py-2.5 uppercase tracking-wider text-[11px] font-semibold cursor-pointer hover:text-[#ff7a1a] transition"
+                          className="px-4 py-2.5 uppercase tracking-wider text-[11px] font-semibold cursor-pointer hover:text-[#ff7a1a] transition whitespace-nowrap bg-zinc-100 dark:bg-[#1a1a17]"
                         >
                           <div className="flex items-center gap-1.5">
                             <span>{col}</span>
@@ -653,12 +676,12 @@ export function ReportsView() {
                   </thead>
                   <tbody className="divide-y divide-zinc-200 dark:divide-[#22221d] font-sans">
                     {filteredRows.map((row, rIdx) => (
-                      <tr key={rIdx} className="hover:bg-zinc-50 dark:hover:bg-[#1a1a17]/50 transition">
+                      <tr key={rIdx} className="hover:bg-zinc-50 dark:hover:bg-[#1a1a17]/70 transition">
                         {result.columns.map((col) => {
                           const val = row[col];
                           const isBool = typeof val === 'boolean';
                           return (
-                            <td key={col} className="px-4 py-2 text-zinc-800 dark:text-zinc-200 whitespace-nowrap">
+                            <td key={col} className="px-4 py-2.5 text-zinc-800 dark:text-zinc-200 whitespace-nowrap">
                               {isBool ? (
                                 <span
                                   className={classNames(
@@ -670,7 +693,7 @@ export function ReportsView() {
                                 >
                                   {val ? 'SÍ (True)' : 'NO (False)'}
                                 </span>
-                              ) : typeof val === 'number' && /price|precio|total/i.test(col) ? (
+                              ) : typeof val === 'number' && /price|precio|total|spent|monto/i.test(col) ? (
                                 <span className="font-mono text-[#ff7a1a] font-medium">
                                   $ {val.toFixed(2)}
                                 </span>
@@ -699,7 +722,7 @@ export function ReportsView() {
 
         {/* TAB CONTENT: 2. CHART */}
         {activeTab === 'chart' && (
-          <div className="flex-1 p-5 rounded-xl border border-zinc-200 dark:border-[#2a2a25] bg-white dark:bg-[#131311] shadow-xs flex flex-col space-y-4">
+          <div className="flex-1 min-h-0 p-4 md:p-5 rounded-xl border border-zinc-200 dark:border-[#2a2a25] bg-white dark:bg-[#131311] shadow-xs flex flex-col overflow-y-auto modern-scrollbar space-y-4">
             <div className="flex items-center justify-between border-b border-zinc-200 dark:border-[#2a2a25] pb-3">
               <div>
                 <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
@@ -860,7 +883,7 @@ export function ReportsView() {
 
         {/* TAB CONTENT: 3. SQL QUERY */}
         {activeTab === 'sql' && (
-          <div className="flex-1 p-4 rounded-xl border border-zinc-200 dark:border-[#2a2a25] bg-white dark:bg-[#131311] shadow-xs flex flex-col space-y-3">
+          <div className="flex-1 min-h-0 p-4 rounded-xl border border-zinc-200 dark:border-[#2a2a25] bg-white dark:bg-[#131311] shadow-xs flex flex-col overflow-y-auto modern-scrollbar space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="i-ph:terminal text-base text-[#ff7a1a]" />
