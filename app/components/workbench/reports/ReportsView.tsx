@@ -10,8 +10,6 @@ import {
   buildCompactSchema,
   generateLocalSemanticSQL,
   executeAlaSQL,
-  injectReportIntoProject,
-  generateReportReactComponent,
   resolveReportQueryWithExploration,
   type ReportTable,
   type ReportExecutionResult,
@@ -34,9 +32,6 @@ export function ReportsView() {
   const [sortAsc, setSortAsc] = useState(true);
   const [customSql, setCustomSql] = useState('');
   const [isEditingSql, setIsEditingSql] = useState(false);
-  const [showInjectModal, setShowInjectModal] = useState(false);
-  const [injectedCode, setInjectedCode] = useState('');
-  const [isInjecting, setIsInjecting] = useState(false);
   const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [isCompactHeader, setIsCompactHeader] = useState(false);
@@ -335,43 +330,6 @@ export function ReportsView() {
     toast.success('Reporte exportado a JSON exitosamente');
   };
 
-  // Handle Code Injection into Project
-  const handleOpenInjectModal = () => {
-    if (!result) return;
-    if (!plan.hasCodeInjection) {
-      toast.warn('🔒 La inyección de código autónomo requiere el Plan Pro Developer o superior.');
-      setIsUpgradeModalOpen(true);
-      return;
-    }
-    const code = generateReportReactComponent(prompt, result.sql, result);
-    setInjectedCode(code);
-    setShowInjectModal(true);
-  };
-
-  const handleConfirmInject = async () => {
-    if (!result) return;
-    const creditSuccess = saasActions.deductCredits(
-      1500,
-      'code_injection',
-      `Inyección de reporte React en proyecto`,
-    );
-    if (!creditSuccess) {
-      toast.error('❌ Saldo insuficiente de créditos para inyección de código.');
-      setIsUpgradeModalOpen(true);
-      return;
-    }
-
-    setIsInjecting(true);
-    const res = await injectReportIntoProject(prompt, result.sql, result);
-    setIsInjecting(false);
-    if (res.success) {
-      toast.success(`🎉 ${res.message}`);
-      setShowInjectModal(false);
-    } else {
-      toast.error(res.message);
-    }
-  };
-
   return (
     <div className="h-full flex flex-col bg-bolt-elements-background-depth-2 text-bolt-elements-textPrimary font-sans select-text overflow-hidden">
       {/* Top Header */}
@@ -437,28 +395,6 @@ export function ReportsView() {
           >
             <span className="i-ph:file-code text-sm text-[#ff7a1a]" />
             <span>JSON</span>
-          </button>
-          <button
-            onClick={handleOpenInjectModal}
-            className={classNames(
-              'px-3 py-1.5 rounded-md text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer shadow-sm',
-              plan.hasCodeInjection
-                ? 'bg-gradient-to-r from-[#ff7a1a] to-[#ea580c] hover:from-[#f97316] hover:to-[#c2410c] text-white shadow-[#ff7a1a]/20'
-                : 'bg-bolt-elements-background-depth-2 text-bolt-elements-textSecondary border border-bolt-elements-borderColor hover:border-amber-500/50',
-            )}
-            title={plan.hasCodeInjection ? "Inyectar este reporte generado como un componente React en tu proyecto" : "Requiere Plan Pro Developer"}
-          >
-            {plan.hasCodeInjection ? (
-              <span className="i-ph:rocket-launch text-sm" />
-            ) : (
-              <span className="i-ph:lock-key-fill text-sm text-amber-500" />
-            )}
-            <span>Inyectar en Proyecto</span>
-            {!plan.hasCodeInjection && (
-              <span className="px-1 py-0.2 text-[8px] font-bold bg-amber-500/20 text-amber-600 dark:text-amber-400 rounded uppercase">
-                PRO
-              </span>
-            )}
           </button>
         </div>
       </div>
@@ -1011,72 +947,6 @@ export function ReportsView() {
           </div>
         )}
       </div>
-
-      {/* CODE INJECTION MODAL */}
-      {showInjectModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs p-4">
-          <div className="bg-bolt-elements-background-depth-1 border border-bolt-elements-borderColor rounded-2xl max-w-2xl w-full p-6 shadow-2xl flex flex-col space-y-4">
-            <div className="flex items-center justify-between border-b border-bolt-elements-borderColor pb-3">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-[#ff7a1a]/15 text-[#ff7a1a] flex items-center justify-center">
-                  <span className="i-ph:rocket-launch text-base" />
-                </div>
-                <div>
-                  <h3 className="text-base font-bold text-bolt-elements-textPrimary">Inyectar Reporte en el Proyecto</h3>
-                  <p className="text-xs text-bolt-elements-textTertiary">
-                    Se creará el componente React autónomo en <code className="text-[#ff7a1a]">src/components/GeneratedReport.jsx</code>
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowInjectModal(false)}
-                className="text-bolt-elements-textTertiary hover:text-bolt-elements-textPrimary"
-              >
-                <span className="i-ph:x text-base" />
-              </button>
-            </div>
-
-            <div className="p-3 bg-bolt-elements-background-depth-2 border border-bolt-elements-borderColor rounded-xl max-h-60 overflow-y-auto">
-              <pre className="text-[11px] font-mono text-bolt-elements-textPrimary leading-relaxed">
-                {injectedCode}
-              </pre>
-            </div>
-
-            <div className="text-xs text-bolt-elements-textSecondary bg-[#ff7a1a]/10 p-3 rounded-lg border border-[#ff7a1a]/20 flex items-start gap-2">
-              <span className="i-ph:info text-sm text-[#ff7a1a] shrink-0 mt-0.5" />
-              <span>
-                Este componente contiene las tarjetas KPI, el gráfico visual SVG, la tabla con filtro reactivo y el botón para exportar a CSV, listo para ser utilizado en cualquier vista de tu aplicación.
-              </span>
-            </div>
-
-            <div className="flex items-center justify-end gap-3 pt-2">
-              <button
-                onClick={() => setShowInjectModal(false)}
-                className="px-4 py-2 text-xs font-medium rounded-lg text-bolt-elements-textSecondary hover:text-bolt-elements-textPrimary hover:bg-bolt-elements-background-depth-2 transition cursor-pointer"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={handleConfirmInject}
-                disabled={isInjecting}
-                className="px-4 py-2 text-xs font-bold rounded-lg bg-[#ff7a1a] hover:bg-[#ea580c] text-white transition flex items-center gap-1.5 shadow-md shadow-[#ff7a1a]/20 cursor-pointer"
-              >
-                {isInjecting ? (
-                  <>
-                    <span className="i-svg-spinners:90-ring-with-bg text-sm" />
-                    <span>Guardando...</span>
-                  </>
-                ) : (
-                  <>
-                    <span className="i-ph:check-bold text-xs" />
-                    <span>Confirmar e Inyectar en Código</span>
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* PLAN UPGRADE MODAL */}
       <PlanUpgradeModal
