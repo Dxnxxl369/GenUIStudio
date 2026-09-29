@@ -40,6 +40,7 @@ export function ReportsView() {
   const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [isCompactHeader, setIsCompactHeader] = useState(false);
+  const [showKpis, setShowKpis] = useState(true);
 
   // Extract tables from files and localStorage
   const tables: ReportTable[] = useMemo(() => {
@@ -534,32 +535,68 @@ export function ReportsView() {
           )}
         </div>
 
-        {/* Executive KPI Metric Cards (Compact & sleek) */}
+        {/* Executive KPI Metric Cards (Colapsable y adaptativo en 1 fila) */}
         {!isCompactHeader && result && result.kpis.length > 0 && (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 shrink-0">
-            {result.kpis.map((kpi, idx) => (
-              <div
-                key={idx}
-                className="px-3 py-2 rounded-xl bg-white dark:bg-[#131311] border border-zinc-200 dark:border-[#2a2a25] shadow-xs flex items-center justify-between gap-2"
-              >
-                <div className="min-w-0">
-                  <span className="text-[10px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider block truncate">
-                    {kpi.label}
-                  </span>
-                  <div className="text-base font-bold text-zinc-900 dark:text-[#f2f0e9] leading-tight">
-                    {kpi.value}
-                  </div>
-                  {kpi.subtext && (
-                    <span className="text-[10px] text-zinc-400 dark:text-zinc-500 block truncate">
-                      {kpi.subtext}
-                    </span>
-                  )}
-                </div>
-                {kpi.icon && (
-                  <span className={classNames(kpi.icon, 'text-lg text-[#ff7a1a] shrink-0')} />
-                )}
+          <div className="shrink-0 flex flex-col gap-1.5">
+            <div className="flex items-center justify-between px-1">
+              <div className="flex items-center gap-1.5 text-zinc-500 dark:text-zinc-400 font-semibold text-[11px] uppercase tracking-wider">
+                <span className="i-ph:chart-polar text-sm text-[#ff7a1a]" />
+                <span>Métricas del Reporte ({result.kpis.length})</span>
               </div>
-            ))}
+              <button
+                onClick={() => setShowKpis(!showKpis)}
+                className="flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium text-zinc-600 dark:text-zinc-300 hover:text-[#ff7a1a] dark:hover:text-[#ff7a1a] bg-zinc-100 hover:bg-zinc-200 dark:bg-[#1a1a17] dark:hover:bg-[#22221e] border border-zinc-200 dark:border-[#2a2a25] transition cursor-pointer shadow-xs"
+                title={showKpis ? "Ocultar tarjetas para dar más espacio a la tabla" : "Mostrar tarjetas de métricas"}
+              >
+                <span className={showKpis ? "i-ph:caret-up text-xs text-[#ff7a1a]" : "i-ph:caret-down text-xs text-[#ff7a1a]"} />
+                <span>{showKpis ? "Ocultar métricas" : "Mostrar métricas"}</span>
+              </button>
+            </div>
+
+            {showKpis ? (
+              <div className={classNames(
+                'grid gap-2.5',
+                result.kpis.length === 1 ? 'grid-cols-1' :
+                result.kpis.length === 2 ? 'grid-cols-2' :
+                result.kpis.length === 3 ? 'grid-cols-1 sm:grid-cols-3' :
+                'grid-cols-2 sm:grid-cols-4'
+              )}>
+                {result.kpis.map((kpi, idx) => (
+                  <div
+                    key={idx}
+                    className="p-3 rounded-xl bg-white dark:bg-[#131311] border border-zinc-200 dark:border-[#2a2a25] shadow-xs flex items-center justify-between gap-3 hover:border-[#ff7a1a]/30 transition"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider truncate mb-0.5">
+                        {kpi.label}
+                      </div>
+                      <div className="text-lg font-extrabold text-zinc-900 dark:text-[#f2f0e9] leading-tight truncate">
+                        {kpi.value}
+                      </div>
+                      {kpi.subtext && (
+                        <div className="text-[10px] text-zinc-400 dark:text-zinc-500 truncate mt-0.5">
+                          {kpi.subtext}
+                        </div>
+                      )}
+                    </div>
+                    {kpi.icon && (
+                      <div className="w-8 h-8 rounded-lg bg-[#ff7a1a]/10 border border-[#ff7a1a]/20 flex items-center justify-center shrink-0">
+                        <span className={classNames(kpi.icon, 'text-base text-[#ff7a1a]')} />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-lg bg-zinc-100/70 dark:bg-[#161614] border border-zinc-200 dark:border-[#22221e] text-xs">
+                {result.kpis.map((kpi, idx) => (
+                  <div key={idx} className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-white dark:bg-[#1a1a17] border border-zinc-200 dark:border-[#2a2a25]">
+                    <span className="text-[10px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase">{kpi.label}:</span>
+                    <span className="font-bold text-zinc-900 dark:text-[#f2f0e9] text-xs">{kpi.value}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -632,15 +669,15 @@ export function ReportsView() {
           <div className="flex-1 min-h-0 flex flex-col rounded-xl border border-zinc-200 dark:border-[#2a2a25] bg-white dark:bg-[#131311] overflow-hidden shadow-xs">
             {/* Table Search & Filter Bar */}
             <div className="p-2.5 border-b border-zinc-200 dark:border-[#2a2a25] flex items-center justify-between gap-3 bg-zinc-50 dark:bg-[#181815] shrink-0">
-              <div className="relative flex-1 max-w-xs">
+              <div className="relative flex-1 max-w-sm">
                 <input
                   type="text"
                   placeholder="Filtrar en esta tabla..."
                   value={tableSearch}
                   onChange={(e) => setTableSearch(e.target.value)}
-                  className="w-full pl-7 pr-3 py-1.5 text-xs rounded-md bg-white dark:bg-[#1a1a17] border border-zinc-200 dark:border-[#2a2a25] text-zinc-900 dark:text-[#f2f0e9] placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:border-[#ff7a1a]"
+                  className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg bg-white dark:bg-[#141412] border border-zinc-200 dark:border-[#2a2a25] text-zinc-900 dark:text-[#f2f0e9] placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-[#ff7a1a] focus:border-[#ff7a1a] transition"
                 />
-                <span className="i-ph:magnifying-glass absolute left-2 top-2 text-zinc-400 text-xs" />
+                <span className="i-ph:magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-400 text-xs pointer-events-none" />
               </div>
               <span className="text-xs text-zinc-500 dark:text-zinc-400 font-medium">
                 Mostrando {filteredRows.length} de {result?.rows.length || 0} filas
@@ -648,16 +685,16 @@ export function ReportsView() {
             </div>
 
             {/* Table Data Grid - Adaptive Full Height with Smooth Scroll */}
-            <div className="flex-1 min-h-0 overflow-auto modern-scrollbar relative">
+            <div className="flex-1 min-h-[220px] overflow-auto modern-scrollbar relative">
               {result && result.columns.length > 0 ? (
                 <table className="w-full text-left text-xs border-collapse min-w-full">
-                  <thead className="sticky top-0 bg-zinc-100/95 dark:bg-[#1a1a17]/95 backdrop-blur text-zinc-700 dark:text-zinc-300 font-semibold border-b border-zinc-200 dark:border-[#2a2a25] select-none z-10 shadow-xs">
+                  <thead className="sticky top-0 bg-zinc-100/95 dark:bg-[#181815] backdrop-blur text-zinc-700 dark:text-zinc-300 font-semibold border-b border-zinc-200 dark:border-[#2a2a25] select-none z-10 shadow-xs">
                     <tr>
                       {result.columns.map((col) => (
                         <th
                           key={col}
                           onClick={() => handleSort(col)}
-                          className="px-4 py-2.5 uppercase tracking-wider text-[11px] font-semibold cursor-pointer hover:text-[#ff7a1a] transition whitespace-nowrap bg-zinc-100 dark:bg-[#1a1a17]"
+                          className="px-4 py-2.5 uppercase tracking-wider text-[11px] font-semibold cursor-pointer hover:text-[#ff7a1a] transition whitespace-nowrap bg-zinc-100 dark:bg-[#181815]"
                         >
                           <div className="flex items-center gap-1.5">
                             <span>{col}</span>
@@ -676,12 +713,12 @@ export function ReportsView() {
                   </thead>
                   <tbody className="divide-y divide-zinc-200 dark:divide-[#22221d] font-sans">
                     {filteredRows.map((row, rIdx) => (
-                      <tr key={rIdx} className="hover:bg-zinc-50 dark:hover:bg-[#1a1a17]/70 transition">
+                      <tr key={rIdx} className="even:bg-zinc-50/50 dark:even:bg-[#161614]/40 hover:bg-zinc-100/70 dark:hover:bg-[#1f1f1b] transition-colors">
                         {result.columns.map((col) => {
                           const val = row[col];
                           const isBool = typeof val === 'boolean';
                           return (
-                            <td key={col} className="px-4 py-2.5 text-zinc-800 dark:text-zinc-200 whitespace-nowrap">
+                            <td key={col} className="px-4 py-2.5 text-zinc-900 dark:text-zinc-100 whitespace-nowrap font-normal">
                               {isBool ? (
                                 <span
                                   className={classNames(
@@ -694,7 +731,7 @@ export function ReportsView() {
                                   {val ? 'SÍ (True)' : 'NO (False)'}
                                 </span>
                               ) : typeof val === 'number' && /price|precio|total|spent|monto/i.test(col) ? (
-                                <span className="font-mono text-[#ff7a1a] font-medium">
+                                <span className="font-mono text-[#ff7a1a] font-semibold">
                                   $ {val.toFixed(2)}
                                 </span>
                               ) : (
